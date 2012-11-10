@@ -71,17 +71,26 @@ void setup(void) {
   pAPD->unidle_device();                // we're not idle at startup
   delay(300);
 
+  // this is moved to apduino
   SerPrintP("APP: SETUP DONE\n\n\n");
   delay(100);
 }
 
+// the loop
 void loop(void) {
-  if (pAPD) { pAPD->loop(); }
 
-  // enable APDuino rule processing after the first loop
-  if (firstrun) {
-        firstrun=0;
-        pAPD->enableRuleProcessing();
-    }
+  if (pAPD) { pAPD->loop(); }	// make sure to loop papd
 
+  // now do whatever you want.
+  // if you want it to work,
+  //   remember: while you're out in the main loop & not in pAPD->loop()
+  //   your sensors & controls & rules & other operations are not being performed
+  //   as this is all a single thread.
+  //   so write quick (and safe) code, that DOES NOT WASTE TIME : no delays > 1-2ms OVERALL,
+  //   try to keep the entire stuff within ~50ms (use timers/metros/flags to execute code you really have to)
+  // else
+  //   feel free to do whatever
+  // except
+  //   blaiming me :-)
 }
+
